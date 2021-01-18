@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--Извиняюсь, что одним файлом. Подумал, что кода немного, и так лучше будет. Также, сделал верстку не совсем пиксель-перфектно. Если нужно - доделаю (хотя некоторые отступы на оригинальном макете вроде даже хуже смотрятся)-->
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homework 03.10.21</title>
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .container {
+        border-radius: 1%;
+        border: 2px solid #bbb;
+        box-shadow: 0 0 10px #bbb;
+        height: 785px;
+        margin: 3em auto 0 auto;
+        width: 600px;
+      }
+
+      .tab-container {
+        align-items: flex-end;
+        background: linear-gradient(#ffffff, #acacac);
+        box-sizing: border-box;
+        display: flex;
+        height: 100px;
+        justify-content: space-around;
+        padding: 0 50px;
+        width: 100%;
+      }
+
+      .tab {
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.733);
+        border-bottom: none;
+        border-radius: 10% 10% 0 0;
+        box-shadow: -1px -1px 2px 2px white;
+        color: #aaa;
+        cursor: pointer;
+        display: flex;
+        font-size: 22px;
+        font-weight: 600;
+        height: 60px;
+        justify-content: center;
+        padding: 0 30px;
+      }
+
+      .active-tab {
+        background-color: white;
+        color: black;
+      }
+
+      .content-container {
+        padding-top: 2px;
+      }
+
+      .content-container hr {
+        margin: 2px auto;
+        width: 80%;
+      }
+
+      .content-container div:last-child hr {
+        display: none;
+      }
+
+      .news-post {
+        /* box-sizing: border-box; */
+        padding: 0.5em 3em;
+      }
+
+      .news-post:hover {
+        background-color: lightgray;
+      }
+
+      .news-post a {
+        color: black;
+        text-decoration: none;
+      }
+
+      .news-post:hover a {
+        color: darkblue;
+      }
+
+      .news-post img {
+        float: left;
+        margin-right: 2em;
+        position: relative;
+        top: 10px;
+        width: 100px;
+      }
+
+      .news-info {
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <section class="tab-container">
+        <div class="tab active-tab" id="featured">Featured</div>
+        <div class="tab" id="recent">Recent</div>
+        <div class="tab" id="comments">Comments</div>
+      </section>
+      <div class="content-container"></div>
+    </section>
+
+    <script>
+      const tabContainer = document.querySelector('.tab-container'),
+        contentContainer = document.querySelector('.content-container');
+
+      //На практике данные, насколько понимаю, будут получаться через xhr get-запрос. Поэтому я просто использовал эти тестовые переменные во всех вызовах функции, формирующей каждую новость.
+      let defaultTitle =
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        defaultDate = 'Oct 13th',
+        defaultNumComments = 50;
+
+      createNews();
+
+      tabContainer.addEventListener('click', (e) => {
+        for (let i = 0; i < tabContainer.children.length; i++) {
+          tabContainer.children[i].classList.remove('active-tab');
+        }
+
+        e.target.classList.add('active-tab');
+
+        contentContainer.innerHTML = '';
+
+        //Для других табов по идее тоже нужна аналогичная логика со своим форматированием контента, но в макете был только один таб. Так что остальные я не прописывал.
+        if (e.target.id === 'featured') {
+          createNews();
+        }
+      });
+
+      function newsTemplate(
+        pic = 'assets/img/n_nopict.png',
+        title = defaultTitle,
+        date = defaultDate,
+        numComments = defaultNumComments
+      ) {
+        return `<div class="news-post">
+                <img src=${pic}>
+                <div>
+                <h3><a href="#">${title}</a></h3>
+                <p class="news-info">Posted on ${date} &nbsp|&nbsp ${numComments} Comments</p>
+                </div>
+                </div>
+                <hr>`;
+      }
+
+      function createNews() {
+        let fragment = document.createDocumentFragment();
+
+        // Вот тут у меня совсем не элегантно :(. По идее, на практике мы через xhr такие данные из базы будем брать. Тогда бы я через forEach или редьюсом делал.
+        fragment = newsTemplate('assets/img/n1.png');
+        fragment += newsTemplate('assets/img/n2.png');
+        fragment += newsTemplate('assets/img/n3.png');
+        fragment += newsTemplate('assets/img/n4.png');
+        fragment += newsTemplate('assets/img/n5.png');
+
+        contentContainer.insertAdjacentHTML('beforeend', fragment);
+      }
+    </script>
+  </body>
+</html>
